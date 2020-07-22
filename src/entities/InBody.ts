@@ -5,7 +5,8 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  RelationId
 } from "typeorm";
 import { User } from "./User";
 
@@ -21,6 +22,10 @@ export class Inbody extends BaseEntity {
     onDelete: "CASCADE"
   })
   user: User;
+
+  @Field(() => Number)
+  @RelationId((inbody: Inbody) => inbody.user)
+  userId: number;
 
   @Field(() => Number)
   @Column()
