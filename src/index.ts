@@ -10,6 +10,7 @@ import path from "path";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import connectionOptions from "../ormconfig";
+import { decodeJWT } from "./utils/JWTAutentication";
 
 const resolverFiles: any[] = loadFilesSync(
   path.join(__dirname, "./api/**/*.resolvers.*")
@@ -20,12 +21,31 @@ async function main() {
   await createConnection(connectionOptions);
 
   const schema = await buildSchema({
-    resolvers: [mergedResolvers.SayHelloResolver]
+    resolvers: [
+      mergedResolvers.UserResolver,
+      mergedResolvers.ExerciseResolver,
+      mergedResolvers.WorkoutResolver,
+      mergedResolvers.InbodyResolver
+    ]
   });
 
   const server = new ApolloServer({
-    schema
+    schema,
+    context: ({ req }) => {
+      const token = req.get("JWT");
+      if (token) {
+        const user = decodeJWT(token);
+        if (user) {
+          return user;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    }
   });
+
   const app = express();
   app.use(cors());
   app.use(helmet());
