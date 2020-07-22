@@ -20,7 +20,7 @@ export class InbodyResolver {
     @Ctx() ctxUser: User
   ): Promise<INormalResponse> {
     try {
-      if (!ctxUser) throw new Error("Sorry, log in please.");
+      if (!ctxUser.id) throw new Error("Sorry, log in please.");
       const newInbodyData = Inbody.create({
         weight,
         fat,
@@ -47,7 +47,7 @@ export class InbodyResolver {
     @Ctx() ctxUser: User
   ): Promise<INormalResponse> {
     try {
-      if (!ctxUser) throw new Error("Sorry, log in please.");
+      if (!ctxUser.id) throw new Error("Sorry, log in please.");
       const existInbodyData = await Inbody.findOne({ where: { id } });
       if (!existInbodyData) throw new Error("Sorry, inbody data not found");
       if (String(ctxUser.id) !== String(existInbodyData.userId))
