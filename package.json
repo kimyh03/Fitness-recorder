@@ -18,8 +18,11 @@
   "homepage": "https://github.com/kimyh03/Fitness-recorder#readme",
   "dependencies": {
     "@types/helmet": "0.0.47",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/morgan": "^1.9.1",
     "apollo-server-express": "^2.16.0",
+    "bcrypt": "^5.0.0",
+    "class-validator": "^0.12.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
