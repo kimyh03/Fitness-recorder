@@ -7,7 +7,9 @@
 
 - User
 - Exercise
+- ExerciseRecord
 - Workout
+- WorkoutItem
 - Inbody
 
 ## Resolvers
@@ -26,8 +28,9 @@
 
 ### Workout resolvers
 
-- [ ] Add workout
-- [ ] Delete workout
+- [ ] Add Workout
+- [ ] Delete Workout
+- [ ] Get workout days
 - [ ] Get list of workout (newer & older system; github history)
 
 ### Inbody resolvers

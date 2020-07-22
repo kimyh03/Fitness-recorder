@@ -7,36 +7,36 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn
 } from "typeorm";
-import { User } from "./User";
+import { Workout } from "./Workout";
 
 @Entity()
 @ObjectType()
-export class Inbody extends BaseEntity {
+export class WorkoutItem extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Field(() => User)
-  @ManyToOne((type) => User, (user) => user.inbodies, {
+  @Field(() => Workout)
+  @ManyToOne((type) => Workout, (workout) => workout.items, {
     onDelete: "CASCADE"
   })
-  user: User;
+  workout: Workout;
 
-  @Field(() => Number)
+  @Field(() => String)
+  @Column()
+  title: string;
+
+  @Field(() => Number, { nullable: true })
   @Column()
   weight: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column()
-  fat: number;
+  set: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column()
-  muscle: number;
-
-  @Field(() => Number)
-  @Column()
-  bodyFatRate: number;
+  time: number;
 
   @Field(() => String)
   @CreateDateColumn()
