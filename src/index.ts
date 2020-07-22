@@ -31,10 +31,10 @@ async function main() {
 
   const server = new ApolloServer({
     schema,
-    context: ({ req }) => {
+    context: async ({ req }) => {
       const token = req.get("JWT");
       if (token) {
-        const user = decodeJWT(token);
+        const user = await decodeJWT(token);
         if (user) {
           return user;
         } else {
