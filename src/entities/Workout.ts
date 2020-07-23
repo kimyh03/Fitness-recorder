@@ -6,7 +6,8 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  RelationId
 } from "typeorm";
 import { ExerciseRecord } from "./ExerciseRecord";
 import { User } from "./User";
@@ -25,9 +26,13 @@ export class Workout extends BaseEntity {
   })
   user: User;
 
-  @Field(() => WorkoutItem)
+  @Field(() => Number)
+  @RelationId((workout: Workout) => workout.user)
+  userId: number;
+
+  @Field(() => [WorkoutItem])
   @OneToMany((type) => WorkoutItem, (workoutItem) => workoutItem.workout)
-  items: WorkoutItem;
+  items: WorkoutItem[];
 
   @Field(() => String, { nullable: true })
   @Column()
@@ -37,12 +42,12 @@ export class Workout extends BaseEntity {
   @Column()
   rating: number;
 
-  @Field(() => ExerciseRecord)
+  @Field(() => [ExerciseRecord])
   @OneToMany(
     (type) => ExerciseRecord,
     (exerciseRecord) => exerciseRecord.workout
   )
-  records: ExerciseRecord;
+  records: ExerciseRecord[];
 
   @Field(() => String)
   @CreateDateColumn()
