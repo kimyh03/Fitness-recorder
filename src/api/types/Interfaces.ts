@@ -1,6 +1,5 @@
 import { Exercise } from "../../entities/Exercise";
 import { Inbody } from "../../entities/InBody";
-import { Workout } from "../../entities/Workout";
 
 export interface INormalResponse {
   ok: boolean;
@@ -23,10 +22,4 @@ export interface IInbodyResponse {
   ok: boolean;
   error: string | null;
   inbody: Inbody[] | null;
-}
-
-export interface IWorkoutResponse {
-  ok: boolean;
-  error: string | null;
-  workout: Workout[] | null;
 }
