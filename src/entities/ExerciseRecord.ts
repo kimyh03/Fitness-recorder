@@ -7,7 +7,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn
 } from "typeorm";
-import { Exercise } from "./Exercise ";
+import { Exercise } from "./Exercise";
+import { User } from "./User";
 import { Workout } from "./Workout";
 
 @Entity()
@@ -16,6 +17,12 @@ export class ExerciseRecord extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: string;
+
+  @Field(() => User)
+  @ManyToOne((type) => User, (user) => user.exerciseRecords, {
+    onDelete: "CASCADE"
+  })
+  user: User;
 
   @Field(() => Workout)
   @ManyToOne((type) => Workout, (workout) => workout.records, {
@@ -29,9 +36,9 @@ export class ExerciseRecord extends BaseEntity {
   })
   exercise: Exercise;
 
-  @Field(() => String)
+  @Field(() => Number)
   @Column()
-  weight: string;
+  weight: number;
 
   @Field(() => String)
   @CreateDateColumn()
