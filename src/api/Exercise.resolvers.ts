@@ -1,14 +1,15 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { Exercise } from "../entities/Exercise ";
+import { Exercise } from "../entities/Exercise";
 import { User } from "../entities/User";
-import { INormalResponse } from "./types/Interfaces";
+import { ExerciseResponse } from "./types/ExerciseResponse";
+import { IExerciseResponse, INormalResponse } from "./types/Interfaces";
 import { NormalResponse } from "./types/NormalResponse";
 
 @Resolver()
 export class ExerciseResolver {
   @Query(() => [Exercise])
   async exercises() {
-    return await Exercise.find();
+    return await Exercise.find({ relations: ["records"] });
   }
 
   @Mutation(() => NormalResponse)
@@ -57,6 +58,54 @@ export class ExerciseResolver {
       return {
         ok: false,
         error: error.message
+      };
+    }
+  }
+
+  @Query(() => ExerciseResponse)
+  async getAllExerciseData(@Ctx() ctxUser: User): Promise<IExerciseResponse> {
+    if (!ctxUser.id) throw new Error("Sorry, log in please.");
+    try {
+      const exercises = await Exercise.find({
+        where: { userId: ctxUser.id },
+        relations: ["records"]
+      });
+      return {
+        ok: true,
+        error: null,
+        exercise: exercises
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+        exercise: null
+      };
+    }
+  }
+
+  @Query(() => ExerciseResponse)
+  async getBodyPartExerciseData(
+    @Arg("bodyPart") bodyPart: string,
+    @Ctx() ctxUser: User
+  ): Promise<IExerciseResponse> {
+    if (!ctxUser.id) throw new Error("Sorry, log in please.");
+    try {
+      const exercises = await Exercise.find({
+        where: { userId: ctxUser.id, bodyPart },
+        relations: ["records"]
+      });
+      if (!exercises) throw new Error("Sorry, exercise not found.");
+      return {
+        ok: true,
+        error: null,
+        exercise: exercises
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+        exercise: null
       };
     }
   }

@@ -27,6 +27,7 @@ export class Exercise extends BaseEntity {
 
   @Field(() => Number)
   @RelationId((exercise: Exercise) => exercise.user)
+  @Column()
   userId: number;
 
   @Field(() => String)
