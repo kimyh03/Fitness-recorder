@@ -1,7 +1,8 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Inbody } from "../entities/InBody";
 import { User } from "../entities/User";
-import { INormalResponse } from "./types/Interfaces";
+import { InbodyResponse } from "./types/InbodyResponse";
+import { IInbodyResponse, INormalResponse } from "./types/Interfaces";
 import { NormalResponse } from "./types/NormalResponse";
 
 @Resolver()
@@ -61,6 +62,25 @@ export class InbodyResolver {
       return {
         ok: false,
         error: error.message
+      };
+    }
+  }
+
+  @Query(() => InbodyResponse)
+  async getInbodyData(@Ctx() ctxUser: User): Promise<IInbodyResponse> {
+    try {
+      if (!ctxUser.id) throw new Error("Sorry, log in please.");
+      const inbodies = await Inbody.find({ where: { userId: ctxUser.id } });
+      return {
+        ok: true,
+        error: null,
+        inbody: inbodies
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+        inbody: null
       };
     }
   }

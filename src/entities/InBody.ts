@@ -25,6 +25,7 @@ export class Inbody extends BaseEntity {
 
   @Field(() => Number)
   @RelationId((inbody: Inbody) => inbody.user)
+  @Column()
   userId: number;
 
   @Field(() => Number)
