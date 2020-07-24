@@ -32,7 +32,7 @@ async function main() {
   const server = new ApolloServer({
     schema,
     context: async ({ req }) => {
-      const token = req.get("JWT");
+      const token = req.get("X-JWT");
       if (token) {
         const user = await decodeJWT(token);
         if (user) {
