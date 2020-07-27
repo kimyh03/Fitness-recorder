@@ -39,7 +39,7 @@ export class UserResolver {
     }
   }
 
-  @Query(() => NormalResponse)
+  @Mutation(() => NormalResponse)
   async doubleCheckEmail(
     @Arg("email") email: string
   ): Promise<INormalResponse> {
@@ -64,7 +64,7 @@ export class UserResolver {
     }
   }
 
-  @Query(() => TokenResponse)
+  @Mutation(() => TokenResponse)
   async signIn(
     @Arg("email") email: string,
     @Arg("password") password: string
