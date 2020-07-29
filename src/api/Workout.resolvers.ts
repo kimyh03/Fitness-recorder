@@ -65,17 +65,21 @@ export class WorkoutResolver {
     };
     const createExerciseRecords = async (workout) => {
       routineItems.map(async (item) => {
-        const exercise = await Exercise.findOne({
-          where: { userId: ctxUser.id, title: item.title }
-        });
-        if (exercise) {
-          const newExerciseRecord = ExerciseRecord.create({
-            workout,
-            user: ctxUser,
-            exercise,
-            weight: item.weight
+        if (item.weight) {
+          const exercise = await Exercise.findOne({
+            where: { userId: ctxUser.id, title: item.title }
           });
-          await newExerciseRecord.save();
+          if (exercise) {
+            const newExerciseRecord = ExerciseRecord.create({
+              workout,
+              user: ctxUser,
+              exercise,
+              weight: item.weight
+            });
+            await newExerciseRecord.save();
+            exercise.latestRecord = item.weight;
+            await exercise.save();
+          }
         }
       });
     };

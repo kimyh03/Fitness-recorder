@@ -35,7 +35,7 @@ export class Exercise extends BaseEntity {
   bodyPart: string;
 
   @Field(() => String)
-  @Column({ unique: true })
+  @Column()
   title: string;
 
   @Field(() => [ExerciseRecord])
@@ -45,6 +45,10 @@ export class Exercise extends BaseEntity {
     { nullable: true }
   )
   records: ExerciseRecord[];
+
+  @Field(() => Number, { nullable: true })
+  @Column({ nullable: true })
+  latestRecord: number;
 
   @Field(() => String)
   @CreateDateColumn()
