@@ -1,5 +1,6 @@
 import { Exercise } from "../../entities/Exercise";
 import { Inbody } from "../../entities/InBody";
+import { User } from "../../entities/User";
 import { Workout } from "../../entities/Workout";
 
 export interface INormalResponse {
@@ -29,4 +30,10 @@ export interface IWorkoutResponse {
   ok: boolean;
   error: string | null;
   workout: Workout[] | null;
+}
+
+export interface IUserResponse {
+  ok: boolean;
+  error: string | null;
+  user: User | null;
 }

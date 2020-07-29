@@ -1,10 +1,15 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { User } from "../entities/User";
 import { comparePassword, encryptToHash } from "../utils/hashAuthentication";
 import { createJWT } from "../utils/JWTAutentication";
-import { INormalResponse, ITokenResponse } from "./types/Interfaces";
+import {
+  INormalResponse,
+  ITokenResponse,
+  IUserResponse
+} from "./types/Interfaces";
 import { NormalResponse } from "./types/NormalResponse";
 import { TokenResponse } from "./types/TokenResponse";
+import { UserResponse } from "./types/UserResponse";
 
 @Resolver()
 export class UserResolver {
@@ -92,6 +97,29 @@ export class UserResolver {
         ok: false,
         error: error.message,
         token: null
+      };
+    }
+  }
+
+  @Query(() => UserResponse)
+  async getMe(@Ctx() ctxUser: User): Promise<IUserResponse> {
+    try {
+      if (!ctxUser.id) throw new Error("Sorry, you don't have a permission.");
+      const user = await User.findOne({
+        where: { id: ctxUser.id },
+        relations: ["exercises"]
+      });
+      if (!user) throw new Error("Sorry, user not found");
+      return {
+        ok: true,
+        error: null,
+        user
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+        user: null
       };
     }
   }
