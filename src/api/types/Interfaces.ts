@@ -37,3 +37,10 @@ export interface IUserResponse {
   error: string | null;
   user: User | null;
 }
+
+export interface IGetMeResponse {
+  ok: boolean;
+  error: string | null;
+  user: User | null;
+  latestInbodyData: Inbody[] | null;
+}

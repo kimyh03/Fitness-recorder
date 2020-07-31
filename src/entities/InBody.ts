@@ -28,21 +28,21 @@ export class Inbody extends BaseEntity {
   @Column()
   userId: number;
 
-  @Field(() => Number)
+  @Field(() => String)
   @Column()
-  weight: number;
+  weight: string;
 
-  @Field(() => Number)
+  @Field(() => String)
   @Column()
-  fat: number;
+  fat: string;
 
-  @Field(() => Number)
+  @Field(() => String)
   @Column()
-  muscle: number;
+  muscle: string;
 
-  @Field(() => Number)
+  @Field(() => String)
   @Column()
-  bodyFatRate: number;
+  bodyFatRate: string;
 
   @Field(() => String)
   @CreateDateColumn()

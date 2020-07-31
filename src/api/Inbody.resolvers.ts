@@ -14,10 +14,10 @@ export class InbodyResolver {
 
   @Mutation(() => NormalResponse)
   async createInbodyData(
-    @Arg("weight") weight: number,
-    @Arg("fat") fat: number,
-    @Arg("muscle") muscle: number,
-    @Arg("bodyFatRate") bodyFatRate: number,
+    @Arg("weight") weight: string,
+    @Arg("fat") fat: string,
+    @Arg("muscle") muscle: string,
+    @Arg("bodyFatRate") bodyFatRate: string,
     @Ctx() ctxUser: User
   ): Promise<INormalResponse> {
     try {
