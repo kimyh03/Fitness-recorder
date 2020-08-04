@@ -5,12 +5,9 @@ export class RoutineItem {
   @Field(() => String)
   title: string;
 
-  @Field(() => Number, { nullable: true })
-  weight?: number;
+  @Field(() => String)
+  weight: string;
 
-  @Field(() => Number, { nullable: true })
-  set?: number;
-
-  @Field(() => Number, { nullable: true })
-  time?: number;
+  @Field(() => String)
+  set: string;
 }

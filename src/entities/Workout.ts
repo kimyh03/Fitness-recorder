@@ -35,12 +35,12 @@ export class Workout extends BaseEntity {
   items: WorkoutItem[];
 
   @Field(() => String, { nullable: true })
-  @Column()
+  @Column({ nullable: true })
   review: string;
 
-  @Field(() => Number)
-  @Column()
-  rating: number;
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  rating: string;
 
   @Field(() => [ExerciseRecord])
   @OneToMany(
@@ -49,7 +49,7 @@ export class Workout extends BaseEntity {
   )
   records: ExerciseRecord[];
 
-  @Field(() => String)
-  @CreateDateColumn()
-  createdAt: string;
+  @Field(() => Date)
+  @CreateDateColumn({ type: "timestamp" })
+  createdAt: Date;
 }

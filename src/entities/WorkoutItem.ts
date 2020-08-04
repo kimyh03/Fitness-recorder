@@ -33,17 +33,13 @@ export class WorkoutItem extends BaseEntity {
   @Column()
   title: string;
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
-  weight: number;
+  weight: string;
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
-  set: number;
-
-  @Field(() => Number, { nullable: true })
-  @Column({ nullable: true })
-  time: number;
+  set: string;
 
   @Field(() => String)
   @CreateDateColumn()

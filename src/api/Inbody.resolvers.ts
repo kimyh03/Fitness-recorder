@@ -18,6 +18,7 @@ export class InbodyResolver {
     @Arg("fat") fat: string,
     @Arg("muscle") muscle: string,
     @Arg("bodyFatRate") bodyFatRate: string,
+    @Arg("recordDate") recordDate: string,
     @Ctx() ctxUser: User
   ): Promise<INormalResponse> {
     try {
@@ -27,6 +28,7 @@ export class InbodyResolver {
         fat,
         muscle,
         bodyFatRate,
+        recordDate,
         user: ctxUser
       });
       await newInbodyData.save();

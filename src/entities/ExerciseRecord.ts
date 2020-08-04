@@ -36,9 +36,9 @@ export class ExerciseRecord extends BaseEntity {
   })
   exercise: Exercise;
 
-  @Field(() => Number)
+  @Field(() => String)
   @Column()
-  weight: number;
+  weight: string;
 
   @Field(() => String)
   @CreateDateColumn()

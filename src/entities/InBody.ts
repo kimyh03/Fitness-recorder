@@ -45,6 +45,10 @@ export class Inbody extends BaseEntity {
   bodyFatRate: string;
 
   @Field(() => String)
-  @CreateDateColumn()
-  createdAt: string;
+  @Column()
+  recordDate: string;
+
+  @Field(() => Date)
+  @CreateDateColumn({ type: "timestamp" })
+  createdAt: Date;
 }

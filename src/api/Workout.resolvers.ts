@@ -46,7 +46,7 @@ export class WorkoutResolver {
   async createWorkout(
     @Arg("routineItems", (type) => [RoutineItem]) routineItems: RoutineItem[],
     @Arg("review") review: string,
-    @Arg("rating") rating: number,
+    @Arg("rating") rating: string,
     @Ctx() ctxUser: User
   ): Promise<INormalResponse> {
     if (!ctxUser.id) throw new Error("Sorry, log in please.");
@@ -57,8 +57,7 @@ export class WorkoutResolver {
           user: ctxUser,
           title: item.title,
           weight: item.weight,
-          set: item.set,
-          time: item.time
+          set: item.set
         });
         await newWorkoutItem.save();
       });

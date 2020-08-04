@@ -46,9 +46,9 @@ export class Exercise extends BaseEntity {
   )
   records: ExerciseRecord[];
 
-  @Field(() => Number, { nullable: true })
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
-  latestRecord: number;
+  latestRecord: string;
 
   @Field(() => String)
   @CreateDateColumn()

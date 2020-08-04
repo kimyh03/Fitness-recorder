@@ -20,21 +20,25 @@ export class ExerciseResolver {
   ): Promise<INormalResponse> {
     try {
       if (!ctxUser.id) throw new Error("Sorry, log in please.");
-      const newExercise = Exercise.create({
-        user: ctxUser,
-        bodyPart,
-        title
+      const existExercise = await Exercise.findOne({
+        where: { user: ctxUser, bodyPart, title }
       });
-      await newExercise.save();
-      return {
-        ok: true,
-        error: null
-      };
+      if (existExercise?.id) {
+        throw new Error("이미 존재하는 종목입니다.");
+      } else {
+        const newExercise = Exercise.create({
+          user: ctxUser,
+          bodyPart,
+          title
+        });
+        await newExercise.save();
+        return {
+          ok: true,
+          error: null
+        };
+      }
     } catch (error) {
-      return {
-        ok: false,
-        error: error.message
-      };
+      throw new Error(error.message);
     }
   }
 
