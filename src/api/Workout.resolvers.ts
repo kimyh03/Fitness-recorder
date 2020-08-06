@@ -1,9 +1,8 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Exercise } from "../entities/Exercise";
-import { ExerciseRecord } from "../entities/ExerciseRecord";
+import { Record } from "../entities/Record";
 import { User } from "../entities/User";
 import { Workout } from "../entities/Workout";
-import { WorkoutItem } from "../entities/WorkoutItem";
 import { INormalResponse, IWorkoutResponse } from "./types/Interfaces";
 import { NormalResponse } from "./types/NormalResponse";
 import { RoutineItem } from "./types/RoutineItem";
@@ -15,10 +14,6 @@ export class WorkoutResolver {
   async workouts() {
     return await Workout.find({ relations: ["items", "records"] });
   }
-  @Query(() => [WorkoutItem])
-  async workouitems() {
-    return await WorkoutItem.find({ relations: ["workout"] });
-  }
 
   @Query(() => WorkoutResponse)
   async getWorkoutData(@Ctx() ctxUser: User): Promise<IWorkoutResponse> {
@@ -26,7 +21,7 @@ export class WorkoutResolver {
       if (!ctxUser.id) throw new Error("Sorry, log in please.");
       const workouts = await Workout.find({
         where: { userId: ctxUser.id },
-        relations: ["items"]
+        relations: ["recods"]
       });
       return {
         ok: true,
@@ -50,35 +45,21 @@ export class WorkoutResolver {
     @Ctx() ctxUser: User
   ): Promise<INormalResponse> {
     if (!ctxUser.id) throw new Error("Sorry, log in please.");
-    const createWorkoutItems = async (workout) => {
+    const createRecords = async (workout) => {
       routineItems.map(async (item) => {
-        const newWorkoutItem = WorkoutItem.create({
-          workout,
-          user: ctxUser,
-          title: item.title,
-          weight: item.weight,
-          set: item.set
+        const exercise = await Exercise.findOne({
+          where: { userId: ctxUser.id, title: item.title }
         });
-        await newWorkoutItem.save();
-      });
-    };
-    const createExerciseRecords = async (workout) => {
-      routineItems.map(async (item) => {
-        if (item.weight) {
-          const exercise = await Exercise.findOne({
-            where: { userId: ctxUser.id, title: item.title }
+        if (exercise) {
+          const newRecord = Record.create({
+            workout,
+            user: ctxUser,
+            exercise,
+            weight: item.weight
           });
-          if (exercise) {
-            const newExerciseRecord = ExerciseRecord.create({
-              workout,
-              user: ctxUser,
-              exercise,
-              weight: item.weight
-            });
-            await newExerciseRecord.save();
-            exercise.latestRecord = item.weight;
-            await exercise.save();
-          }
+          await newRecord.save();
+          exercise.latestRecord = item.weight;
+          await exercise.save();
         }
       });
     };
@@ -89,8 +70,7 @@ export class WorkoutResolver {
         rating
       });
       await newWorkout.save();
-      await createWorkoutItems(newWorkout);
-      await createExerciseRecords(newWorkout);
+      await createRecords(newWorkout);
       return {
         ok: true,
         error: null

@@ -13,13 +13,13 @@ import { Workout } from "./Workout";
 
 @Entity()
 @ObjectType()
-export class ExerciseRecord extends BaseEntity {
+export class Record extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: string;
 
   @Field(() => User)
-  @ManyToOne((type) => User, (user) => user.exerciseRecords, {
+  @ManyToOne((type) => User, (user) => user.records, {
     onDelete: "CASCADE"
   })
   user: User;
@@ -39,6 +39,10 @@ export class ExerciseRecord extends BaseEntity {
   @Field(() => String)
   @Column()
   weight: string;
+
+  @Field(() => String)
+  @Column()
+  set: string;
 
   @Field(() => String)
   @CreateDateColumn()

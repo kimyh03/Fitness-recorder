@@ -9,9 +9,8 @@ import {
   PrimaryGeneratedColumn,
   RelationId
 } from "typeorm";
-import { ExerciseRecord } from "./ExerciseRecord";
+import { Record } from "./Record";
 import { User } from "./User";
-import { WorkoutItem } from "./WorkoutItem";
 
 @Entity()
 @ObjectType()
@@ -30,10 +29,6 @@ export class Workout extends BaseEntity {
   @RelationId((workout: Workout) => workout.user)
   userId: number;
 
-  @Field(() => [WorkoutItem])
-  @OneToMany((type) => WorkoutItem, (workoutItem) => workoutItem.workout)
-  items: WorkoutItem[];
-
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   review: string;
@@ -42,12 +37,9 @@ export class Workout extends BaseEntity {
   @Column({ nullable: true })
   rating: string;
 
-  @Field(() => [ExerciseRecord])
-  @OneToMany(
-    (type) => ExerciseRecord,
-    (exerciseRecord) => exerciseRecord.workout
-  )
-  records: ExerciseRecord[];
+  @Field(() => [Record])
+  @OneToMany((type) => Record, (record) => record.workout)
+  records: Record[];
 
   @Field(() => Date)
   @CreateDateColumn({ type: "timestamp" })

@@ -9,10 +9,9 @@ import {
   PrimaryGeneratedColumn
 } from "typeorm";
 import { Exercise } from "./Exercise";
-import { ExerciseRecord } from "./ExerciseRecord";
 import { Inbody } from "./InBody";
+import { Record } from "./Record";
 import { Workout } from "./Workout";
-import { WorkoutItem } from "./WorkoutItem";
 
 @Entity()
 @ObjectType()
@@ -38,17 +37,13 @@ export class User extends BaseEntity {
   @OneToMany((type) => Exercise, (exercise) => exercise.user)
   exercises: Exercise[];
 
-  @Field(() => [ExerciseRecord], { nullable: true })
-  @OneToMany((type) => ExerciseRecord, (exerciseRecord) => exerciseRecord.user)
-  exerciseRecords: ExerciseRecord[];
+  @Field(() => [Record], { nullable: true })
+  @OneToMany((type) => Record, (record) => record.user)
+  records: Record[];
 
   @Field(() => [Workout], { nullable: true })
   @OneToMany((type) => Workout, (workout) => workout.user)
   workouts: Workout[];
-
-  @Field(() => [WorkoutItem], { nullable: true })
-  @OneToMany((type) => WorkoutItem, (workoutItem) => workoutItem.user)
-  workoutItems: WorkoutItem[];
 
   @Field(() => [Inbody], { nullable: true })
   @OneToMany((type) => Inbody, (inbody) => inbody.user)

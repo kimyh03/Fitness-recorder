@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   RelationId
 } from "typeorm";
-import { ExerciseRecord } from "./ExerciseRecord";
+import { Record } from "./Record";
 import { User } from "./User";
 
 @Entity()
@@ -38,13 +38,9 @@ export class Exercise extends BaseEntity {
   @Column()
   title: string;
 
-  @Field(() => [ExerciseRecord])
-  @OneToMany(
-    (type) => ExerciseRecord,
-    (exerciseRecord) => exerciseRecord.exercise,
-    { nullable: true }
-  )
-  records: ExerciseRecord[];
+  @Field(() => [Record])
+  @OneToMany((type) => Record, (record) => record.exercise, { nullable: true })
+  records: Record[];
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })
