@@ -38,13 +38,13 @@ export class Exercise extends BaseEntity {
   @Column()
   title: string;
 
-  @Field(() => [Record])
+  @Field(() => [Record], { nullable: true })
   @OneToMany((type) => Record, (record) => record.exercise, { nullable: true })
   records: Record[];
 
-  @Field(() => String, { nullable: true })
+  @Field(() => Number, { nullable: true })
   @Column({ nullable: true })
-  latestRecord: string;
+  latestRecord: number;
 
   @Field(() => String)
   @CreateDateColumn()

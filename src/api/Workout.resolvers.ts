@@ -12,7 +12,12 @@ import { WorkoutResponse } from "./types/WorkoutResponse";
 export class WorkoutResolver {
   @Query(() => [Workout])
   async workouts() {
-    return await Workout.find({ relations: ["items", "records"] });
+    return await Workout.find({ relations: ["records"] });
+  }
+
+  @Query(() => [Record])
+  async records() {
+    return await Record.find();
   }
 
   @Query(() => WorkoutResponse)
@@ -41,10 +46,12 @@ export class WorkoutResolver {
   async createWorkout(
     @Arg("routineItems", (type) => [RoutineItem]) routineItems: RoutineItem[],
     @Arg("review") review: string,
-    @Arg("rating") rating: string,
+    @Arg("rating") rating: number,
     @Ctx() ctxUser: User
   ): Promise<INormalResponse> {
     if (!ctxUser.id) throw new Error("Sorry, log in please.");
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth();
     const createRecords = async (workout) => {
       routineItems.map(async (item) => {
         const exercise = await Exercise.findOne({
@@ -55,7 +62,11 @@ export class WorkoutResolver {
             workout,
             user: ctxUser,
             exercise,
-            weight: item.weight
+            weight: item.weight,
+            set: item.set,
+            bodyPart: exercise.bodyPart,
+            year,
+            month
           });
           await newRecord.save();
           exercise.latestRecord = item.weight;
@@ -67,7 +78,9 @@ export class WorkoutResolver {
       const newWorkout = Workout.create({
         user: ctxUser,
         review,
-        rating
+        rating,
+        year,
+        month
       });
       await newWorkout.save();
       await createRecords(newWorkout);
@@ -92,8 +105,8 @@ export class WorkoutResolver {
       if (!ctxUser.id) throw new Error("Sorry, log in please.");
       const existWorkout = await Workout.findOne({ where: { id } });
       if (!existWorkout) throw new Error("Sorry, exercise not found");
-      if (String(ctxUser.id) !== String(existWorkout.userId))
-        throw new Error("Sorry, you don't have a permission");
+      // if (String(ctxUser.id) !== String(existWorkout.userId))
+      // throw new Error("Sorry, you don't have a permission");
       await existWorkout.remove();
       return {
         ok: true,

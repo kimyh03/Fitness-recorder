@@ -29,17 +29,25 @@ export class Workout extends BaseEntity {
   @RelationId((workout: Workout) => workout.user)
   userId: number;
 
-  @Field(() => String, { nullable: true })
-  @Column({ nullable: true })
+  @Field(() => String)
+  @Column()
   review: string;
 
-  @Field(() => String, { nullable: true })
-  @Column({ nullable: true })
-  rating: string;
+  @Field(() => Number)
+  @Column()
+  rating: number;
 
   @Field(() => [Record])
   @OneToMany((type) => Record, (record) => record.workout)
   records: Record[];
+
+  @Field(() => Number)
+  @Column()
+  year: number;
+
+  @Field(() => Number)
+  @Column()
+  month: number;
 
   @Field(() => Date)
   @CreateDateColumn({ type: "timestamp" })

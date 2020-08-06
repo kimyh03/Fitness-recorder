@@ -1,6 +1,8 @@
 import { Field, ObjectType } from "type-graphql";
 import { Inbody } from "../../entities/InBody";
+import { Record } from "../../entities/Record";
 import { User } from "../../entities/User";
+import { Workout } from "../../entities/Workout";
 
 @ObjectType()
 export class GetMeResponse {
@@ -15,4 +17,10 @@ export class GetMeResponse {
 
   @Field(() => [Inbody], { nullable: true })
   latestInbodyData: Inbody[];
+
+  @Field(() => [Workout], { nullable: true })
+  recentWorkouts: Workout[];
+
+  @Field(() => [Record], { nullable: true })
+  recentRecords: Record;
 }

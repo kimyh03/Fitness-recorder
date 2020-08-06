@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn
 } from "typeorm";
@@ -34,15 +35,28 @@ export class Record extends BaseEntity {
   @ManyToOne((type) => Exercise, (exercise) => exercise.records, {
     onDelete: "CASCADE"
   })
+  @JoinColumn()
   exercise: Exercise;
 
   @Field(() => String)
   @Column()
-  weight: string;
+  bodyPart: string;
 
-  @Field(() => String)
+  @Field(() => Number)
   @Column()
-  set: string;
+  weight: number;
+
+  @Field(() => Number)
+  @Column()
+  set: number;
+
+  @Field(() => Number)
+  @Column()
+  year: number;
+
+  @Field(() => Number)
+  @Column()
+  month: number;
 
   @Field(() => String)
   @CreateDateColumn()

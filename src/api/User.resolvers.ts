@@ -1,6 +1,8 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Inbody } from "../entities/InBody";
+import { Record } from "../entities/Record";
 import { User } from "../entities/User";
+import { Workout } from "../entities/Workout";
 import { comparePassword, encryptToHash } from "../utils/hashAuthentication";
 import { createJWT } from "../utils/JWTAutentication";
 import { GetMeResponse } from "./types/GetMEResponse";
@@ -103,12 +105,15 @@ export class UserResolver {
   }
 
   @Query(() => GetMeResponse)
-  async getMe(@Ctx() ctxUser: User): Promise<IGetMeResponse> {
+  async getMe(
+    // @Arg("take") take: number,
+    @Ctx() ctxUser: User
+  ): Promise<IGetMeResponse> {
     try {
       if (!ctxUser.id) throw new Error("Sorry, you don't have a permission.");
       const user = await User.findOne({
         where: { id: ctxUser.id },
-        relations: ["exercises", "inbodies"]
+        relations: ["exercises"]
       });
       if (!user) throw new Error("Sorry, user not found");
       const latestInbodyData = await Inbody.find({
@@ -116,18 +121,32 @@ export class UserResolver {
         take: 1,
         order: { id: "DESC" }
       });
+      const year = new Date().getFullYear();
+      const month = new Date().getMonth();
+      const recentWorkouts = await Workout.find({
+        where: { user, year, month },
+        order: { id: "DESC" }
+      });
+      const recentRecords = await Record.find({
+        where: { user, year, month },
+        order: { id: "DESC" }
+      });
       return {
         ok: true,
         error: null,
         user,
-        latestInbodyData
+        latestInbodyData,
+        recentWorkouts,
+        recentRecords
       };
     } catch (error) {
       return {
         ok: false,
         error: error.message,
         user: null,
-        latestInbodyData: null
+        latestInbodyData: null,
+        recentWorkouts: null,
+        recentRecords: null
       };
     }
   }

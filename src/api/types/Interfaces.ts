@@ -1,5 +1,6 @@
 import { Exercise } from "../../entities/Exercise";
 import { Inbody } from "../../entities/InBody";
+import { Record } from "../../entities/Record";
 import { User } from "../../entities/User";
 import { Workout } from "../../entities/Workout";
 
@@ -43,4 +44,6 @@ export interface IGetMeResponse {
   error: string | null;
   user: User | null;
   latestInbodyData: Inbody[] | null;
+  recentWorkouts: Workout[] | null;
+  recentRecords: Record[] | null;
 }

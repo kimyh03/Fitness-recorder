@@ -5,9 +5,9 @@ export class RoutineItem {
   @Field(() => String)
   title: string;
 
-  @Field(() => String)
-  weight: string;
+  @Field(() => Number)
+  weight: number;
 
-  @Field(() => String)
-  set: string;
+  @Field(() => Number)
+  set: number;
 }
