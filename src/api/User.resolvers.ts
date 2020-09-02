@@ -9,7 +9,7 @@ import { GetMeResponse } from "./types/GetMEResponse";
 import {
   IGetMeResponse,
   INormalResponse,
-  ITokenResponse
+  ITokenResponse,
 } from "./types/Interfaces";
 import { NormalResponse } from "./types/NormalResponse";
 import { TokenResponse } from "./types/TokenResponse";
@@ -32,17 +32,17 @@ export class UserResolver {
       const newUser = User.create({
         email,
         username,
-        password: hasedPassword
+        password: hasedPassword,
       });
       await newUser.save();
       return {
         ok: true,
-        error: null
+        error: null,
       };
     } catch (error) {
       return {
         ok: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -56,18 +56,18 @@ export class UserResolver {
       if (existUser) {
         return {
           ok: false,
-          error: "Sorry, you hava a account"
+          error: "Sorry, you hava a account",
         };
       } else {
         return {
           ok: true,
-          error: null
+          error: null,
         };
       }
     } catch (error) {
       return {
         ok: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -86,50 +86,47 @@ export class UserResolver {
         return {
           ok: true,
           error: null,
-          token
+          token,
         };
       } else {
         return {
           ok: false,
           error: "Sorry, wrong password",
-          token: null
+          token: null,
         };
       }
     } catch (error) {
       return {
         ok: false,
         error: error.message,
-        token: null
+        token: null,
       };
     }
   }
 
   @Query(() => GetMeResponse)
-  async getMe(
-    // @Arg("take") take: number,
-    @Ctx() ctxUser: User
-  ): Promise<IGetMeResponse> {
+  async getMe(@Ctx() ctxUser: User): Promise<IGetMeResponse> {
     try {
       if (!ctxUser.id) throw new Error("Sorry, you don't have a permission.");
       const user = await User.findOne({
         where: { id: ctxUser.id },
-        relations: ["exercises"]
+        relations: ["exercises"],
       });
       if (!user) throw new Error("Sorry, user not found");
       const latestInbodyData = await Inbody.find({
         where: { user },
         take: 1,
-        order: { id: "DESC" }
+        order: { id: "DESC" },
       });
       const year = new Date().getFullYear();
       const month = new Date().getMonth();
       const recentWorkouts = await Workout.find({
         where: { user, year, month },
-        order: { id: "DESC" }
+        order: { id: "DESC" },
       });
       const recentRecords = await Record.find({
         where: { user, year, month },
-        order: { id: "DESC" }
+        order: { id: "DESC" },
       });
       return {
         ok: true,
@@ -137,7 +134,7 @@ export class UserResolver {
         user,
         latestInbodyData,
         recentWorkouts,
-        recentRecords
+        recentRecords,
       };
     } catch (error) {
       return {
@@ -146,7 +143,7 @@ export class UserResolver {
         user: null,
         latestInbodyData: null,
         recentWorkouts: null,
-        recentRecords: null
+        recentRecords: null,
       };
     }
   }

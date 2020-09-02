@@ -21,23 +21,59 @@ export class WorkoutResolver {
   }
 
   @Query(() => WorkoutResponse)
-  async getWorkoutData(@Ctx() ctxUser: User): Promise<IWorkoutResponse> {
+  async getWorkOutDataForHome(
+    @Ctx() ctxUser: User,
+    @Arg("year") year: number,
+    @Arg("month") month: number
+  ) {
     try {
       if (!ctxUser.id) throw new Error("Sorry, log in please.");
       const workouts = await Workout.find({
-        where: { userId: ctxUser.id },
-        relations: ["recods"]
+        where: { userId: ctxUser.id, year, month },
       });
+      if (!workouts) throw new Error("workouts not found");
+      const records = await Record.find({
+        where: { userId: ctxUser.id, year, month },
+      });
+
       return {
         ok: true,
         error: null,
-        workout: workouts
+        workout: workouts,
+        record: records,
       };
     } catch (error) {
       return {
         ok: false,
         error: error.message,
-        workout: null
+        workout: null,
+        record: null,
+      };
+    }
+  }
+
+  @Query(() => WorkoutResponse)
+  async getWorkoutData(
+    @Ctx() ctxUser: User,
+    @Arg("year") year: number,
+    @Arg("month") month: number
+  ): Promise<IWorkoutResponse> {
+    try {
+      if (!ctxUser.id) throw new Error("Sorry, log in please.");
+      const workouts = await Workout.find({
+        where: { userId: ctxUser.id, year, month },
+        relations: ["records"],
+      });
+      return {
+        ok: true,
+        error: null,
+        workout: workouts,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+        workout: null,
       };
     }
   }
@@ -55,7 +91,7 @@ export class WorkoutResolver {
     const createRecords = async (workout) => {
       routineItems.map(async (item) => {
         const exercise = await Exercise.findOne({
-          where: { userId: ctxUser.id, title: item.title }
+          where: { userId: ctxUser.id, title: item.title },
         });
         if (exercise) {
           const newRecord = Record.create({
@@ -66,7 +102,7 @@ export class WorkoutResolver {
             set: item.set,
             bodyPart: exercise.bodyPart,
             year,
-            month
+            month,
           });
           await newRecord.save();
           exercise.latestRecord = item.weight;
@@ -80,18 +116,18 @@ export class WorkoutResolver {
         review,
         rating,
         year,
-        month
+        month,
       });
       await newWorkout.save();
       await createRecords(newWorkout);
       return {
         ok: true,
-        error: null
+        error: null,
       };
     } catch (error) {
       return {
         ok: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -110,12 +146,12 @@ export class WorkoutResolver {
       await existWorkout.remove();
       return {
         ok: true,
-        error: null
+        error: null,
       };
     } catch (error) {
       return {
         ok: false,
-        error: error.message
+        error: error.message,
       };
     }
   }

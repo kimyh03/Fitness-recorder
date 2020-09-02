@@ -31,6 +31,7 @@ export interface IWorkoutResponse {
   ok: boolean;
   error: string | null;
   workout: Workout[] | null;
+  reocrd?: Record[] | null;
 }
 
 export interface IUserResponse {

@@ -6,7 +6,8 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  RelationId,
 } from "typeorm";
 import { Exercise } from "./Exercise";
 import { User } from "./User";
@@ -21,19 +22,24 @@ export class Record extends BaseEntity {
 
   @Field(() => User)
   @ManyToOne((type) => User, (user) => user.records, {
-    onDelete: "CASCADE"
+    onDelete: "CASCADE",
   })
   user: User;
 
+  @Field(() => Number)
+  @Column()
+  @RelationId((record: Record) => record.user)
+  userId: number;
+
   @Field(() => Workout)
   @ManyToOne((type) => Workout, (workout) => workout.records, {
-    onDelete: "CASCADE"
+    onDelete: "CASCADE",
   })
   workout: Workout;
 
   @Field(() => Exercise)
   @ManyToOne((type) => Exercise, (exercise) => exercise.records, {
-    onDelete: "CASCADE"
+    onDelete: "CASCADE",
   })
   @JoinColumn()
   exercise: Exercise;

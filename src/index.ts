@@ -18,43 +18,49 @@ const resolverFiles: any[] = loadFilesSync(
 const mergedResolvers = mergeResolvers(resolverFiles);
 
 async function main() {
-  await createConnection(connectionOptions);
+  try {
+    await createConnection(connectionOptions);
 
-  const schema = await buildSchema({
-    resolvers: [
-      mergedResolvers.UserResolver,
-      mergedResolvers.ExerciseResolver,
-      mergedResolvers.WorkoutResolver,
-      mergedResolvers.InbodyResolver
-    ]
-  });
+    const schema = await buildSchema({
+      resolvers: [
+        mergedResolvers.UserResolver,
+        mergedResolvers.ExerciseResolver,
+        mergedResolvers.WorkoutResolver,
+        mergedResolvers.InbodyResolver,
+      ],
+    });
 
-  const server = new ApolloServer({
-    schema,
-    context: async ({ req }) => {
-      const token = req.get("X-JWT");
-      if (token) {
-        const user = await decodeJWT(token);
-        if (user) {
-          return user;
+    const server = new ApolloServer({
+      schema,
+      context: async ({ req }) => {
+        const token = req.get("X-JWT");
+        if (token) {
+          const user = await decodeJWT(token);
+          if (user) {
+            return user;
+          } else {
+            return null;
+          }
         } else {
           return null;
         }
-      } else {
-        return null;
-      }
-    }
-  });
+      },
+    });
 
-  const app = express();
-  app.use(cors());
-  app.use(helmet());
-  app.use(morgan("dev"));
+    const app = express();
+    app.use(cors());
+    app.use(helmet());
+    app.use(morgan("dev"));
 
-  await server.applyMiddleware({ app });
+    await server.applyMiddleware({ app });
 
-  app.listen({ port: 4000 }, () =>
-    console.log(`✅ Server ready at http://localhost:4000${server.graphqlPath}`)
-  );
+    app.listen({ port: 4000 }, () =>
+      console.log(
+        `✅ Server ready at http://localhost:4000${server.graphqlPath}`
+      )
+    );
+  } catch (e) {
+    console.log(e);
+  }
 }
 main();

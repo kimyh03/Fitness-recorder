@@ -7,7 +7,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  RelationId
+  RelationId,
 } from "typeorm";
 import { Record } from "./Record";
 import { User } from "./User";
@@ -21,11 +21,12 @@ export class Workout extends BaseEntity {
 
   @Field(() => User)
   @ManyToOne((type) => User, (user) => user.workouts, {
-    onDelete: "CASCADE"
+    onDelete: "CASCADE",
   })
   user: User;
 
   @Field(() => Number)
+  @Column()
   @RelationId((workout: Workout) => workout.user)
   userId: number;
 

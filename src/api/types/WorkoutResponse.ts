@@ -1,5 +1,6 @@
 import { Field, ObjectType } from "type-graphql";
-import { Inbody } from "../../entities/InBody";
+import { Record } from "../../entities/Record";
+import { Workout } from "../../entities/Workout";
 
 @ObjectType()
 export class WorkoutResponse {
@@ -9,6 +10,9 @@ export class WorkoutResponse {
   @Field(() => String, { nullable: true })
   error: string;
 
-  @Field(() => [Inbody], { nullable: true })
-  inbody: Inbody[];
+  @Field(() => [Workout], { nullable: true })
+  workout: Workout[];
+
+  @Field(() => [Record], { nullable: true })
+  record: Record[];
 }
